@@ -1,0 +1,108 @@
+extends layout
+block content
+  
+    nav.navbar.navbar-expand-md.navbar-dark.bg-dark.mb-4
+        a.navbar-brand(href='#') Covid Stats
+        button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarCollapse' aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation')
+            span.navbar-toggler-icon
+        #navbarCollapse.collapse.navbar-collapse
+            ul.navbar-nav.mr-auto
+                li.nav-item.active
+                    a.nav-link(href='/') Inicio
+
+    .app-title
+        div
+            h1
+                i.fa.fa-pie-chart
+                |  Charts
+            p Various type of charts for your project
+
+        ul.app-breadcrumb.breadcrumb
+            li.breadcrumb-item
+                i.fa.fa-home.fa-lg
+            li.breadcrumb-item
+                a(href='#') charts
+
+    .row
+        .col-md-12
+            .tile
+                h3.tile-title Line Chart
+                .embed-responsive.embed-responsive-16by9
+                    canvas.embed-responsive-item(id="myChart")
+
+block js-scripts
+    
+    script(type='text/javascript').
+        const MAX_X = 6;
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        var start_date = new Date('2020-1-22');
+        var date = new Date();
+        var date_now = new Date();
+        const diffTime = Math.abs(date - start_date);
+        var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+        diffDays = diffDays / 6;
+        var dates = [];
+        var confirmed = [];
+        var deaths = [];
+        var recovered = [];
+        var arr_data = !{body};
+
+        console.log(arr_data);
+
+        date.setDate(date.getDate() - (MAX_X * (diffDays)));
+        
+        for(let i = 0; i < MAX_X; i++){
+            (i+1 < MAX_X)?date.setDate(date.getDate() + diffDays) : date = date_now;
+            confirmed.push(arr_data[i]['result']['confirmed']);
+            deaths.push(arr_data[i]['result']['deaths']);
+            recovered.push(arr_data[i]['result']['recovered']);
+            dates[i] = months[date.getMonth()] + " " + date.getDate();
+        }
+
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: '# Confirmed',
+                    data: confirmed,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0)',
+                    ],
+                    borderColor: [
+                        'rgba(155, 155, 255, 1)',
+                    ],
+                    borderWidth: 3
+                },{
+                    label: '# Deaths',
+                    data: deaths,
+                    backgroundColor: [
+                        'rgba(255, 50, 50, 0)',
+                    ],
+                    borderColor: [
+                        'rgba(255, 50, 50, 1)',
+                    ],
+                    borderWidth: 3
+                },{
+                    label: '# Recovered',
+                    data: recovered,
+                    backgroundColor: [
+                        'rgba(50, 255, 50, 0)',
+                    ],
+                    borderColor: [
+                        'rgba(50, 255, 50, 1)',
+                    ],
+                    borderWidth: 3
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
