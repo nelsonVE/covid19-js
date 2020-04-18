@@ -1,11 +1,9 @@
 extends ../layout/layout
 block content
 
-    include ../layout/navbar
-
     .container
         table.table.table-hover
-            thead
+            thead.text-muted
                 tr
                     th(scope='col') Country
                     th(scope='col') New Cases
@@ -20,9 +18,17 @@ block content
                         tr
                             if value['Country']
                                 td= value['Country'].toLocaleString()
-                                td + !{value['NewConfirmed'].toLocaleString()}
+                                td.text-warning.font-weight-bold + !{value['NewConfirmed'].toLocaleString()}
                                 td= value['TotalConfirmed'].toLocaleString()
-                                td + !{value['NewRecovered'].toLocaleString()}
+                                td.text-success.font-weight-bold + !{value['NewRecovered'].toLocaleString()}
                                 td= value['TotalRecovered'].toLocaleString()
-                                td + !{value['NewDeaths'].toLocaleString()}
+                                td.text-danger.font-weight-bold + !{value['NewDeaths'].toLocaleString()}
                                 td= value['TotalDeaths'].toLocaleString()
+
+block js-scripts
+    
+    script(type='text/javascript').
+        $(document).ready(() => {
+            $('#nav_countries').addClass('active');
+            $('#nav_home').removeClass('active');
+        });

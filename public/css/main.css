@@ -1,8 +1,35 @@
 .box {
-    border: 1px solid rgb(214, 214, 214);
+    border: 1px solid #ffa372;
     border-radius: 3px;
 }
 
-.border-left {
-    border-left: 1px solid rgb(214, 214, 214);
+.bg-palette {
+    background-color: #ffa372;
+}
+
+.bg-palette-dark {
+    background-color: #1b262c;
+}
+
+.border-left-color {
+    border-left: 1px solid #ffa372;
+}
+
+.navbar-covid {
+    background-color: #0f4c81;
+}
+
+.navbar-covid .navbar-brand,
+.navbar-covid .navbar-text {
+    color: rgba(255,255,255,.8);
+}
+
+.navbar-covid .navbar-nav .nav-link {
+    color: rgba(255,255,255,.5);
+}
+
+.navbar-covid .nav-item.active .nav-link,
+.navbar-covid .nav-item:focus .nav-link,
+.navbar-covid .nav-item:hover .nav-link {
+    color: #ffffff;
 }

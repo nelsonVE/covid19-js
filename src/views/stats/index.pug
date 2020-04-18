@@ -1,13 +1,11 @@
 extends ../layout/layout
 block content
 
-    include ../layout/navbar
-
     .container
         .row
             .col-md-2
-            .col-md-8.text-center.box
-                h1 Stats
+            .col-md-8.text-center.box.p-0
+                h1.bg-palette.text-white.pb-1 Stats
                 small Last updated:&nbsp;
                 small#last 0
                 h3 Confirmed:
@@ -23,29 +21,29 @@ block content
             .col-md-2
             .col-md-8.box
                 .row
-                    .col-md-6.text-center
-                        h1 Recovered
+                    .col-md-6.text-center.p-0
+                        h1.bg-palette.text-white.pb-1 Recovered
                         h4 New Recovered
                         h3 !{info['NewRecovered'].toLocaleString()}
                         h4 Total Recovered
                         h3 !{info['TotalRecovered'].toLocaleString()}
-                    .col-md-6.border-left.text-center
-                        h1 Deaths
+                    .col-md-6.border-left-color.text-center.p-0
+                        h1.bg-palette.text-white.pb-1 Deaths
                         h4 New Deaths
                         h3 !{info['NewDeaths'].toLocaleString()}
                         h4 Total Deaths 
                         h3 !{info['TotalDeaths'].toLocaleString()}
             .col-md-2
     <br><br>
-    .row
-        .col-md-3
-        .col-md-6.text-center
-            .tile
-                h3.tile-title Graph
-                .embed-responsive.embed-responsive-16by9
-                    canvas.embed-responsive-item(id="myChart")
-        .col-md-3
-
+    .container
+        .row
+            .col-md-2
+            .col-md-8.text-center.box.p-0 
+                .tile
+                    h1.tile-title.bg-palette.text-white.pb-1 Graph
+                    .embed-responsive.embed-responsive-16by9
+                        canvas.embed-responsive-item(id="myChart")
+            .col-md-2
 
 block js-scripts
     

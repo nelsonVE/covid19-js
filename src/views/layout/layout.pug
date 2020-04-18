@@ -8,12 +8,14 @@ html
     link(rel='stylesheet', href='/css/main.css')
     
   body
+    include navbar
     block content
- 
+    
     script(type='text/javascript', src='/js/jquery.min.js')
     script(type='text/javascript', src='/js/popper.js')
     script(type='text/javascript', src='/js/bootstrap.min.js')
     script(type='text/javascript', src='/js/Chart.min.js')
     script(type='text/javascript', src='/js/chart.js')
 
+    include footer
     block js-scripts
