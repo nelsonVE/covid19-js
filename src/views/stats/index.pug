@@ -1,39 +1,56 @@
-extends layout
+extends ../layout/layout
 block content
-  
-    nav.navbar.navbar-expand-md.navbar-dark.bg-dark.mb-4
-        a.navbar-brand(href='#') Covid Stats
-        button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarCollapse' aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation')
-            span.navbar-toggler-icon
-        #navbarCollapse.collapse.navbar-collapse
-            ul.navbar-nav.mr-auto
-                li.nav-item.active
-                    a.nav-link(href='/') Inicio
 
-    .app-title
-        div
-            h1
-                i.fa.fa-pie-chart
-                |  Charts
-            p Various type of charts for your project
+    include ../layout/navbar
 
-        ul.app-breadcrumb.breadcrumb
-            li.breadcrumb-item
-                i.fa.fa-home.fa-lg
-            li.breadcrumb-item
-                a(href='#') charts
-
+    .container
+        .row
+            .col-md-2
+            .col-md-8.text-center.box
+                h1 Stats
+                small Last updated:&nbsp;
+                small#last 0
+                h3 Confirmed:
+                h4#confirmed 0
+                h3 Recovered:
+                h4#recovered 0
+                h3 Deaths: 
+                h4#deaths 0
+            .col-md-2
+    <br><br>
+    .container
+        .row
+            .col-md-2
+            .col-md-8.box
+                .row
+                    .col-md-6.text-center
+                        h1 Recovered
+                        h4 New Recovered
+                        h3 !{info['NewRecovered'].toLocaleString()}
+                        h4 Total Recovered
+                        h3 !{info['TotalRecovered'].toLocaleString()}
+                    .col-md-6.border-left.text-center
+                        h1 Deaths
+                        h4 New Deaths
+                        h3 !{info['NewDeaths'].toLocaleString()}
+                        h4 Total Deaths 
+                        h3 !{info['TotalDeaths'].toLocaleString()}
+            .col-md-2
+    <br><br>
     .row
-        .col-md-12
+        .col-md-3
+        .col-md-6.text-center
             .tile
-                h3.tile-title Line Chart
+                h3.tile-title Graph
                 .embed-responsive.embed-responsive-16by9
                     canvas.embed-responsive-item(id="myChart")
+        .col-md-3
+
 
 block js-scripts
     
     script(type='text/javascript').
-        const MAX_X = 6;
+        const MAX_X = 7;
         var ctx = document.getElementById('myChart').getContext('2d');
         var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         var start_date = new Date('2020-1-22');
@@ -41,24 +58,29 @@ block js-scripts
         var date_now = new Date();
         const diffTime = Math.abs(date - start_date);
         var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-        diffDays = diffDays / 6;
+        diffDays = diffDays / MAX_X;
         var dates = [];
         var confirmed = [];
         var deaths = [];
         var recovered = [];
         var arr_data = !{body};
 
-        console.log(arr_data);
-
         date.setDate(date.getDate() - (MAX_X * (diffDays)));
         
         for(let i = 0; i < MAX_X; i++){
-            (i+1 < MAX_X)?date.setDate(date.getDate() + diffDays) : date = date_now;
+            (i+1 < MAX_X)?((i === 0)?date = start_date:date.setDate(date.getDate() + diffDays)) : date = date_now;
             confirmed.push(arr_data[i]['result']['confirmed']);
             deaths.push(arr_data[i]['result']['deaths']);
             recovered.push(arr_data[i]['result']['recovered']);
             dates[i] = months[date.getMonth()] + " " + date.getDate();
         }
+
+        let stats = arr_data[arr_data.length - 1];
+
+        document.getElementById('last').innerHTML = stats['date'];
+        document.getElementById('confirmed').innerHTML = stats['result']['confirmed'].toLocaleString();
+        document.getElementById('recovered').innerHTML = stats['result']['recovered'].toLocaleString();
+        document.getElementById('deaths').innerHTML = stats['result']['deaths'].toLocaleString();
 
         var myChart = new Chart(ctx, {
             type: 'line',
@@ -103,6 +125,14 @@ block js-scripts
                             beginAtZero: true
                         }
                     }]
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            return tooltipItem.yLabel.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                        },
+                        tooltipTemplate: function(label) { return label.value.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");}
+                    }
                 }
             }
         });

@@ -1,0 +1,28 @@
+extends ../layout/layout
+block content
+
+    include ../layout/navbar
+
+    .container
+        table.table.table-hover
+            thead
+                tr
+                    th(scope='col') Country
+                    th(scope='col') New Cases
+                    th(scope='col') Total Cases
+                    th(scope='col') New Recoveries
+                    th(scope='col') Total Recoveries
+                    th(scope='col') New Deaths 
+                    th(scope='col') Total Deaths
+            tbody
+                each data in summary
+                    each value, index in data
+                        tr
+                            if value['Country']
+                                td= value['Country'].toLocaleString()
+                                td + !{value['NewConfirmed'].toLocaleString()}
+                                td= value['TotalConfirmed'].toLocaleString()
+                                td + !{value['NewRecovered'].toLocaleString()}
+                                td= value['TotalRecovered'].toLocaleString()
+                                td + !{value['NewDeaths'].toLocaleString()}
+                                td= value['TotalDeaths'].toLocaleString()
