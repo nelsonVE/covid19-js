@@ -6,11 +6,10 @@ var app = express();
 
 const PORT = 8081;
 
-var stats = require('./src/controllers/stats.js');
-var countries = require('./src/controllers/countries.js');
+var router = require('./src/router.js');
 
-app.use('/home', stats);
-app.use('/countries', countries);
+app.use('/', router);
+
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
