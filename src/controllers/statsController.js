@@ -21,16 +21,15 @@ var statsController = {
       dates.push((date instanceof Date)?date.toLocaleDateString():date);
     }
 
-    var body = await Stats.searchByDates(dates, start_date_param.toLocaleDateString());
-    var summary = await Stats.getSummary();
+    var response = await Promise.all([Stats.searchByDates(dates, start_date_param.toLocaleDateString()), Stats.getSummary()]);
 
-    info['NewDeaths'] = summary['Global']['NewDeaths'];
-    info['TotalDeaths'] = summary['Global']['TotalDeaths'];
-    info['NewRecovered'] = summary['Global']['NewRecovered'];
-    info['TotalRecovered'] = summary['Global']['TotalRecovered'];
+    info['NewDeaths'] = response[1]['Global']['NewDeaths'];
+    info['TotalDeaths'] = response[1]['Global']['TotalDeaths'];
+    info['NewRecovered'] = response[1]['Global']['NewRecovered'];
+    info['TotalRecovered'] = response[1]['Global']['TotalRecovered'];
 
     res.render('stats/index', {
-      body: JSON.stringify(body),
+      body: JSON.stringify(response[0]),
       info: info
     });
 
